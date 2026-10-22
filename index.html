@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitro Sneakers</title>
+    <style>
+        /* Estilos visuais da página */
+        body { font-family: 'Arial', sans-serif; background-color: #121212; color: #ffffff; margin: 0; padding: 0; }
+        header { background-color: #000000; padding: 20px; text-align: center; border-bottom: 3px solid #39ff14; }
+        header h1 { margin: 0; font-size: 2.5em; font-style: italic; text-transform: uppercase; }
+        .container-produtos { display: flex; justify-content: center; gap: 20px; padding: 40px 20px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+        .cartao-tenis { background-color: #1e1e1e; border: 1px solid #333; border-radius: 10px; width: 260px; padding: 15px; text-align: center; }
+        .imagem-tenis { width: 100%; border-radius: 8px; height: 180px; object-fit: cover; }
+        .titulo-produto { font-size: 1.2em; margin: 15px 0 5px 0; }
+        .preco-produto { font-size: 1.6em; color: #39ff14; font-weight: bold; margin: 10px 0; }
+        .frete-produto { font-size: 0.85em; color: #aaaaaa; margin-bottom: 20px; }
+        .btn-comprar { background-color: #39ff14; color: #000; font-weight: bold; font-size: 1em; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; text-transform: uppercase; }
+        #caixa-resumo { display: none; max-width: 600px; margin: 30px auto 0 auto; padding: 20px; background-color: #1e1e1e; color: white; text-align: center; border: 2px solid #39ff14; border-radius: 8px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⚡ Nitro Sneakers</h1>
+    </header>
+
+    <div id="caixa-resumo"></div>
+
+    <section class="container-produtos">
+        
+        <!-- PRODUTOS MASCULINOS -->
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Masculino 1" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Max (M)</h2>
+            <p class="preco-produto">R$ 300,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Max (M)', 300)">Comprar</button>
+        </div>
+
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&q=80" alt="Masculino 2" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Pro (M)</h2>
+            <p class="preco-produto">R$ 350,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Pro (M)', 350)">Comprar</button>
+        </div>
+
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?w=400&q=80" alt="Masculino 3" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Zoom (M)</h2>
+            <p class="preco-produto">R$ 280,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Zoom (M)', 280)">Comprar</button>
+        </div>
+
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1584735174965-48c48d7edce7?w=400&q=80" alt="Masculino 4" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Elite (M)</h2>
+            <p class="preco-produto">R$ 400,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Elite (M)', 400)">Comprar</button>
+        </div>
+
+        <!-- PRODUTOS FEMININOS -->
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&q=80" alt="Feminino 1" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Air (F)</h2>
+            <p class="preco-produto">R$ 300,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Air (F)', 300)">Comprar</button>
+        </div>
+
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&q=80" alt="Feminino 2" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Glide (F)</h2>
+            <p class="preco-produto">R$ 320,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Glide (F)', 320)">Comprar</button>
+        </div>
+
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&q=80" alt="Feminino 3" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Flex (F)</h2>
+            <p class="preco-produto">R$ 290,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Flex (F)', 290)">Comprar</button>
+        </div>
+
+        <div class="cartao-tenis">
+            <img src="https://images.unsplash.com/photo-1533681473673-a8f898a49c63?w=400&q=80" alt="Feminino 4" class="imagem-tenis">
+            <h2 class="titulo-produto">Nitro Aura (F)</h2>
+            <p class="preco-produto">R$ 380,00</p>
+            <p class="frete-produto">+ Taxa: R$ 30,00</p>
+            <!-- CORREÇÃO: Alterado de 300 para 380 -->
+            <button class="btn-comprar" onclick="iniciarCompra('Nitro Aura (F)', 380)">Comprar</button>
+        </div>
+
+    </section>
+
+    <script>
+        // OBJETO DE CONFIGURAÇÃO
+        const configLoja = {
+            nomeFantasia: "Nitro Sneakers",
+            moedaPadrao: "R$",
+            taxaFrete: 30 // CORREÇÃO: Alterado de "30" (string) para 30 (number)
+        };
+
+        // MÓDULO DE INTERFACE
+        function exibirResumoNaTela(nomeProduto, valorTotal) {
+            let divResumo = document.getElementById("caixa-resumo");
+            divResumo.style.display = "block";
+            divResumo.innerHTML = `Produto: ${nomeProduto}<br>Valor Total: ${configLoja.moedaPadrao} ${valorTotal},00`;
+        }
+
+        // MÓDULO DE NEGÓCIOS
+        function calcularTotalComFrete(precoDoTenis) {
+            let total = precoDoTenis + configLoja.taxaFrete;
+            return total;
+        }
+
+        // CONTROLADOR PRINCIPAL
+        function iniciarCompra(nome, preco) {
+            let totalCompra = calcularTotalComFrete(preco);
+            exibirResumoNaTela(nome, totalCompra);
+        }
+    </script>
+
+</body>
+</html>
