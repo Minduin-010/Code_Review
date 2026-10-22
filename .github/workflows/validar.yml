@@ -1,0 +1,63 @@
+
+name: Validar Nitro Sneakers
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - ".github/workflows/validar.yml"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - ".github/workflows/validar.yml"
+
+jobs:
+  validar:
+    name: Validar frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa os arquivos do repositório
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      # Confere se o HTML existe na pasta correta
+      - name: Verificar arquivo HTML
+        run: |
+          if [ ! -f frontend/index.html ]; then
+            echo "Erro: arquivo frontend/index.html não encontrado."
+            echo "Arquivos HTML encontrados:"
+            find . -name "index.html" -not -path "./.git/*"
+            exit 1
+          fi
+
+          echo "index.html encontrado."
+
+      # Verifica a estrutura básica do HTML
+      - name: Verificar estrutura HTML
+        run: |
+          grep -qi "<!DOCTYPE html>" frontend/index.html
+          grep -qi "<html" frontend/index.html
+          grep -qi "<head>" frontend/index.html
+          grep -qi "<body>" frontend/index.html
+          grep -qi "</html>" frontend/index.html
+
+          echo "Estrutura HTML validada."
+
+      # Confere as principais funções JavaScript
+      - name: Verificar JavaScript
+        run: |
+          grep -q "function iniciarCompra" frontend/index.html
+          grep -q "function exibirResumoNaTela" frontend/index.html
+          grep -q "/api/compras" frontend/index.html
+
+          echo "Integração JavaScript encontrada."
+
+      # Finaliza a validação
+      - name: Validação concluída
+        run: echo "Frontend Nitro Sneakers validado com sucesso!"
