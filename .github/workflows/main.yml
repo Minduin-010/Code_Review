@@ -1,0 +1,63 @@
+name: Validar Nitro Sneakers
+
+# Executa a Action quando houver alterações na branch main
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validar:
+    name: Validar projeto
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa o código do repositório
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      # Verifica se o arquivo HTML existe
+      - name: Verificar arquivo HTML
+        run: |
+          if [ ! -f index.html ]; then
+            echo "Erro: arquivo index.html não encontrado."
+            exit 1
+          fi
+
+          echo "index.html encontrado."
+
+      # Verifica se o HTML possui a estrutura básica
+      - name: Verificar estrutura HTML
+        run: |
+          grep -q "<!DOCTYPE html>" index.html
+          grep -q "<html" index.html
+          grep -q "<head>" index.html
+          grep -q "<body>" index.html
+          grep -q "</html>" index.html
+
+          echo "Estrutura HTML validada."
+
+      # Verifica se as principais funções JavaScript existem
+      - name: Verificar JavaScript
+        run: |
+          grep -q "function iniciarCompra" index.html
+          grep -q "function calcularTotalComFrete" index.html
+          grep -q "function exibirResumoNaTela" index.html
+
+          echo "Funções JavaScript encontradas."
+
+      # Confirma que a configuração da loja está presente
+      - name: Verificar configuração da loja
+        run: |
+          grep -q "const configLoja" index.html
+          grep -q "taxaFrete: 30" index.html
+
+          echo "Configuração da loja validada."
+
+      # Finaliza a Action
+      - name: Validação concluída
+        run: echo "Projeto Nitro Sneakers validado com sucesso!"
