@@ -1,0 +1,71 @@
+name: Validar Backend Python
+
+# Executa a Action quando houver alterações no backend
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+
+jobs:
+  validar:
+    name: Validar backend
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa o código do repositório
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      # Configura o Python
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Instala as dependências do backend
+      - name: Instalar dependências
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      # Verifica a sintaxe dos arquivos Python
+      - name: Verificar sintaxe Python
+        working-directory: backend
+        run: |
+          python -m compileall .
+
+      # Verifica se o arquivo principal existe
+      - name: Verificar arquivo principal
+        run: |
+          if [ ! -f backend/app.py ]; then
+            echo "Erro: arquivo backend/app.py não encontrado."
+            exit 1
+          fi
+
+          echo "Arquivo app.py encontrado."
+
+      # Executa os testes, caso existam
+      - name: Executar testes
+        working-directory: backend
+        run: |
+          if [ -d tests ]; then
+            python -m pytest tests
+          else
+            echo "Nenhuma pasta de testes encontrada."
+          fi
+
+      # Finaliza a Action
+      - name: Validação concluída
+        run: echo "Backend Python validado com sucesso!"
