@@ -1,18 +1,22 @@
 name: Validar Nitro Sneakers
 
-# Executa a Action quando houver alterações na branch main
+# Executa a Action quando houver alterações no frontend
 on:
   push:
     branches:
       - main
+    paths:
+      - "frontend/**"
 
   pull_request:
     branches:
       - main
+    paths:
+      - "frontend/**"
 
 jobs:
   validar:
-    name: Validar projeto
+    name: Validar frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +27,8 @@ jobs:
       # Verifica se o arquivo HTML existe
       - name: Verificar arquivo HTML
         run: |
-          if [ ! -f index.html ]; then
-            echo "Erro: arquivo index.html não encontrado."
+          if [ ! -f frontend/index.html ]; then
+            echo "Erro: arquivo frontend/index.html não encontrado."
             exit 1
           fi
 
@@ -33,31 +37,31 @@ jobs:
       # Verifica se o HTML possui a estrutura básica
       - name: Verificar estrutura HTML
         run: |
-          grep -q "<!DOCTYPE html>" index.html
-          grep -q "<html" index.html
-          grep -q "<head>" index.html
-          grep -q "<body>" index.html
-          grep -q "</html>" index.html
+          grep -q "<!DOCTYPE html>" frontend/index.html
+          grep -q "<html" frontend/index.html
+          grep -q "<head>" frontend/index.html
+          grep -q "<body>" frontend/index.html
+          grep -q "</html>" frontend/index.html
 
           echo "Estrutura HTML validada."
 
       # Verifica se as principais funções JavaScript existem
       - name: Verificar JavaScript
         run: |
-          grep -q "function iniciarCompra" index.html
-          grep -q "function calcularTotalComFrete" index.html
-          grep -q "function exibirResumoNaTela" index.html
+          grep -q "function iniciarCompra" frontend/index.html
+          grep -q "function calcularTotalComFrete" frontend/index.html
+          grep -q "function exibirResumoNaTela" frontend/index.html
 
           echo "Funções JavaScript encontradas."
 
       # Confirma que a configuração da loja está presente
       - name: Verificar configuração da loja
         run: |
-          grep -q "const configLoja" index.html
-          grep -q "taxaFrete: 30" index.html
+          grep -q "const configLoja" frontend/index.html
+          grep -q "taxaFrete: 30" frontend/index.html
 
           echo "Configuração da loja validada."
 
       # Finaliza a Action
       - name: Validação concluída
-        run: echo "Projeto Nitro Sneakers validado com sucesso!"
+        run: echo "Frontend Nitro Sneakers validado com sucesso!"
