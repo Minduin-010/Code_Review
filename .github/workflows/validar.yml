@@ -12,6 +12,7 @@ on:
   pull_request:
     branches:
       - main
+      - main
     paths:
       - "frontend/**"
       - ".github/workflows/validar.yml"
@@ -26,38 +27,88 @@ jobs:
       - name: Baixar código
         uses: actions/checkout@v4
 
-      # Confere se o HTML existe na pasta correta
+      # Configura o Node.js para executar as ferramentas de validação
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Verifica se o HTML existe
       - name: Verificar arquivo HTML
         run: |
           if [ ! -f frontend/index.html ]; then
-            echo "Erro: arquivo frontend/index.html não encontrado."
-            echo "Arquivos HTML encontrados:"
-            find . -name "index.html" -not -path "./.git/*"
+            echo "Erro: frontend/index.html não encontrado."
             exit 1
           fi
 
-          echo "index.html encontrado."
+      # Instala as ferramentas de validação
+      - name: Instalar validadores
+        run: npm install --no-save html-validate eslint
 
-      # Verifica a estrutura básica do HTML
-      - name: Verificar estrutura HTML
+      # Valida a estrutura HTML
+      - name: Validar HTML
+        run: npx html-validate frontend/index.html
+
+      # Extrai o JavaScript do HTML e verifica sua sintaxe
+      - name: Validar JavaScript
         run: |
-          grep -qi "<!DOCTYPE html>" frontend/index.html
-          grep -qi "<html" frontend/index.html
-          grep -qi "<head>" frontend/index.html
-          grep -qi "<body>" frontend/index.html
-          grep -qi "</html>" frontend/index.html
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
 
-          echo "Estrutura HTML validada."
+          class ScriptExtractor(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.in_script = False
+                  self.external = False
+                  self.parts = []
+                  self.scripts = []
 
-      # Confere as principais funções JavaScript
-      - name: Verificar JavaScript
-        run: |
-          grep -q "function iniciarCompra" frontend/index.html
-          grep -q "function exibirResumoNaTela" frontend/index.html
-          grep -q "/api/compras" frontend/index.html
+              def handle_starttag(self, tag, attrs):
+                  if tag == "script":
+                      attrs = dict(attrs)
+                      self.in_script = True
+                      self.external = "src" in attrs
+                      self.parts = []
 
-          echo "Integração JavaScript encontrada."
+              def handle_data(self, data):
+                  if self.in_script and not self.external:
+                      self.parts.append(data)
 
-      # Finaliza a validação
+              def handle_endtag(self, tag):
+                  if tag == "script" and self.in_script:
+                      if not self.external:
+                          self.scripts.append("".join(self.parts))
+                      self.in_script = False
+                      self.external = False
+
+          html = Path("frontend/index.html").read_text(encoding="utf-8")
+          parser = ScriptExtractor()
+          parser.feed(html)
+
+          if not parser.scripts:
+              raise SystemExit("Nenhum JavaScript interno encontrado.")
+
+          for i, script in enumerate(parser.scripts, start=1):
+              Path(f"/tmp/script-{i}.js").write_text(script, encoding="utf-8")
+          PY
+
+          for file in /tmp/script-*.js; do
+            npx eslint --no-config-lookup \
+              --no-ignore \
+              --no-warn-ignored \
+              --rule 'no-undef: error' \
+              --rule 'no-unexpected-multiline: error' \
+              --rule 'no-unreachable: error' \
+              --rule 'valid-typeof: error' \
+              --rule 'no-dupe-keys: error' \
+              --rule 'no-constant-condition: error' \
+              --rule 'no-func-assign: error' \
+              --rule 'no-unmodified-loop-condition: error' \
+              --rule 'no-unreachable-loop: error' \
+              "$file"
+          done
+
+      # Confirma a conclusão das verificações
       - name: Validação concluída
-        run: echo "Frontend Nitro Sneakers validado com sucesso!"
+        run: echo "Validação estática do frontend concluída com sucesso."
